@@ -10,6 +10,14 @@ var coolRouter = require('./routes/users');
 
 var app = express();
 
+//Set up mongoose connection
+var mongoose = require('mongoose');
+var mongoDB =
+  'mongodb+srv://josephjwoodley:Jiovanni25@cluster0-du6cn.azure.mongodb.net/local_library?retryWrites=true';
+mongoose.connect(mongoDB, { useNewUrlParser: true });
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
