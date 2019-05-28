@@ -7,7 +7,7 @@ var GenreSchema = new Schema({
   category: {
     type: String,
     required: true,
-    enum: ['Fiction', 'Non-Fiction', 'Romance', 'Military History'],
+    enum: ['Fantasy', 'French Poetry', 'Science Fiction'],
     default: 'Fiction'
   }
 });
