@@ -19,7 +19,7 @@ AuthorSchema.virtual('name').get(function() {
 AuthorSchema.virtual('lifespan').get(function() {
   return (
     moment(this.date_of_birth).format('MMMM Do, YYYY') +
-    '-' +
+    ' - ' +
     moment(this.date_of_death).format('MMMM Do, YYYY')
   );
 });
