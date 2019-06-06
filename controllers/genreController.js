@@ -28,7 +28,7 @@ exports.genre_detail = function(req, res, next) {
         Genre.findById(req.params.id).exec(callback);
       },
 
-      genre_books: function(callback) {
+      genres_books: function(callback) {
         Book.find({ genre: req.params.id }).exec(callback);
       }
     },
@@ -46,7 +46,7 @@ exports.genre_detail = function(req, res, next) {
       res.render('genre_detail', {
         title: 'Genre Detail',
         genre: results.genre,
-        genre_books: results.genre_books
+        genre_books: results.genres_books
       });
     }
   );
@@ -115,7 +115,7 @@ exports.genre_delete_get = function(req, res, next) {
       genre: function(callback) {
         Genre.findById(req.params.id).exec(callback);
       },
-      genre_books: function(callback) {
+      genres_books: function(callback) {
         Book.find({ genre: req.params.id }).exec(callback);
       }
     },
