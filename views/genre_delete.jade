@@ -4,7 +4,7 @@ block content
   h1 #{title}: #{genre.name}
   //p= author.lifespan
   
-  if genre_books.length
+  if genres_books.length
   
     p #[strong Delete the following books before attempting to delete this genre.]
   
@@ -13,7 +13,7 @@ block content
       h4 Books
     
       dl
-      each book in genre_books
+      each book in genres_books
         dt 
           a(href=book.url) #{book.title}
         dd #{book.summary}
