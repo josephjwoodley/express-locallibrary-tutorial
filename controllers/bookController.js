@@ -201,11 +201,11 @@ exports.book_create_post = [
 exports.book_delete_get = function(req, res, next) {
   async.parallel(
     {
-      authors: function(callback) {
-        Author.findById(req.params.id).exec(callback);
+      book: function(callback) {
+        Book.findById(req.params.id).exec(callback);
       },
-      genres: function(callback) {
-        Genre.find({ genre: req.params.id }).exec(callback);
+      book_instance: function(callback) {
+        BookInstance.find({ book: req.params.id }).exec(callback);
       }
     },
     function(err, results) {
@@ -219,8 +219,8 @@ exports.book_delete_get = function(req, res, next) {
       // Successful, so render.
       res.render('author_delete', {
         title: 'Delete Author',
-        authors: results.authors,
-        genres: results.genres
+        book: results.book,
+        book_instances: results.book_instance
       });
     }
   );
@@ -230,11 +230,11 @@ exports.book_delete_get = function(req, res, next) {
 exports.book_delete_post = function(req, res, next) {
   async.parallel(
     {
-      authors: function(callback) {
-        Author.findById(req.body.authorid).exec(callback);
+      book: function(callback) {
+        Book.findById(req.body.bookid).exec(callback);
       },
-      genres: function(callback) {
-        Genre.find({ genre: req.body.genreid }).exec(callback);
+      book_instance: function(callback) {
+        BookInstance.find({ book: req.body.genreid }).exec(callback);
       }
     },
     function(err, results) {
@@ -246,18 +246,18 @@ exports.book_delete_post = function(req, res, next) {
         // Author has books. Render in same way as for GET route.
         res.render('book_delete', {
           title: 'Delete Book',
-          authors: results.authors,
-          genres: results.genres
+          book: results.book,
+          book_instances: results.book_instance
         });
         return;
       } else {
-        // Author has no books. Delete object and redirect to the list of authors.
+        // Book has no book instances. Delete object and redirect to the list of books.
         Author.findByIdAndRemove(req.body.authorid, function deleteAuthor(err) {
           if (err) {
             return next(err);
           }
-          // Success - go to author list
-          res.redirect('/catalog/authors');
+          // Success - go to book list
+          res.redirect('/catalog/books');
         });
       }
     }
