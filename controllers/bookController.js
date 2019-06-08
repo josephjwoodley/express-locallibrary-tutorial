@@ -197,14 +197,71 @@ exports.book_create_post = [
   }
 ];
 
-// Display book delete form on GET.
-exports.book_delete_get = function(req, res) {
-  res.send('NOT IMPLEMENTED: Book delete GET');
+// Display Book delete form on GET.
+exports.book_delete_get = function(req, res, next) {
+  async.parallel(
+    {
+      authors: function(callback) {
+        Author.findById(req.params.id).exec(callback);
+      },
+      genres: function(callback) {
+        Genre.find({ genre: req.params.id }).exec(callback);
+      }
+    },
+    function(err, results) {
+      if (err) {
+        return next(err);
+      }
+      if (results.author == null) {
+        // No results.
+        res.redirect('/catalog/authors');
+      }
+      // Successful, so render.
+      res.render('author_delete', {
+        title: 'Delete Author',
+        authors: results.authors,
+        genres: results.genres
+      });
+    }
+  );
 };
 
-// Handle book delete on POST.
-exports.book_delete_post = function(req, res) {
-  res.send('NOT IMPLEMENTED: Book delete POST');
+// Handle Book delete on POST.
+exports.book_delete_post = function(req, res, next) {
+  async.parallel(
+    {
+      authors: function(callback) {
+        Author.findById(req.body.authorid).exec(callback);
+      },
+      genres: function(callback) {
+        Genre.find({ genre: req.body.genreid }).exec(callback);
+      }
+    },
+    function(err, results) {
+      if (err) {
+        return next(err);
+      }
+      // Success
+      if (results.authors_books.length > 0) {
+        // Author has books. Render in same way as for GET route.
+        res.render('book_delete', {
+          title: 'Delete Book',
+          authors: results.authors,
+          genres: results.genres
+        });
+        return;
+      } else {
+        // Author has no books. Delete object and redirect to the list of authors.
+        Author.findByIdAndRemove(req.body.authorid, function deleteAuthor(err) {
+          if (err) {
+            return next(err);
+          }
+          // Success - go to author list
+          res.redirect('/catalog/authors');
+        });
+      }
+    }
+  );
 };
 
 // Display book update form on GET.
