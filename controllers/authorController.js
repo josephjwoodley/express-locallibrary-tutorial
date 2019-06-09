@@ -90,6 +90,14 @@ exports.author_create_post = [
     // Extract the validation errors from a request.
     const errors = validationResult(req);
 
+    // Create an Author object with escaped and trimmed data.
+    var author = new Author({
+      first_name: req.body.first_name,
+      family_name: req.body.family_name,
+      date_of_birth: req.body.date_of_birth,
+      date_of_death: req.body.date_of_death
+    });
+
     if (!errors.isEmpty()) {
       // There are errors. Render form again with sanitized values/errors messages.
       res.render('author_form', {
@@ -101,13 +109,7 @@ exports.author_create_post = [
     } else {
       // Data from form is valid.
 
-      // Create an Author object with escaped and trimmed data.
-      var author = new Author({
-        first_name: req.body.first_name,
-        family_name: req.body.family_name,
-        date_of_birth: req.body.date_of_birth,
-        date_of_death: req.body.date_of_death
-      });
+      //Save author.
       author.save(function(err) {
         if (err) {
           return next(err);

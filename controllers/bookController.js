@@ -136,6 +136,7 @@ exports.book_create_post = [
 
   // Sanitize fields (using wildcard).
   sanitizeBody('*').escape(),
+  sanitizeBody('genre.*').escape(),
 
   // Process request after validation and sanitization.
   (req, res, next) => {
