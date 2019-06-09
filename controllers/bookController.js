@@ -212,9 +212,11 @@ exports.book_delete_get = function(req, res, next) {
       if (err) {
         return next(err);
       }
-      if (results.author == null) {
+      if (results.book == null) {
         // No results.
-        res.redirect('/catalog/authors');
+        var err = new Error('Book not found');
+        err.status = 404;
+        return next(err);
       }
       // Successful, so render.
       res.render('author_delete', {
