@@ -2,6 +2,7 @@ var Book = require('../models/book');
 var Author = require('../models/author');
 var Genre = require('../models/genre');
 var BookInstance = require('../models/bookinstance');
+
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
@@ -202,7 +203,10 @@ exports.book_delete_get = function(req, res, next) {
   async.parallel(
     {
       book: function(callback) {
-        Book.findById(req.params.id).exec(callback);
+        Book.findById(req.params.id)
+          .populate('author')
+          .populate('genre')
+          .exec(callback);
       },
       book_instance: function(callback) {
         BookInstance.find({ book: req.params.id }).exec(callback);
@@ -233,10 +237,13 @@ exports.book_delete_post = function(req, res, next) {
   async.parallel(
     {
       book: function(callback) {
-        Book.findById(req.body.bookid).exec(callback);
+        Book.findById(req.params.id)
+          .populate('author')
+          .populate('genre')
+          .exec(callback);
       },
       book_instance: function(callback) {
-        BookInstance.find({ book: req.body.genreid }).exec(callback);
+        BookInstance.find({ book: req.params.id }).exec(callback);
       }
     },
     function(err, results) {
@@ -244,7 +251,7 @@ exports.book_delete_post = function(req, res, next) {
         return next(err);
       }
       // Success
-      if (results.authors_books.length > 0) {
+      if (results.book_instances.length > 0) {
         // Author has books. Render in same way as for GET route.
         res.render('book_delete', {
           title: 'Delete Book',
