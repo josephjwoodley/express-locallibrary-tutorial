@@ -35,7 +35,7 @@ exports.bookinstance_detail = function(req, res, next) {
       }
       // Successful, so render.
       res.render('bookinstance_detail', {
-        title: 'Book:',
+        title: 'Copy: ' + bookinstance.book.title,
         bookinstance: bookinstance
       });
     });
